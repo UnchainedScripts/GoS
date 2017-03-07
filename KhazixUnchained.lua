@@ -74,11 +74,11 @@ function KhazixUnchained:Combo(target)
         if(Utility:IsReady(_R) and self.Menu.Combo.R:Value() and not Utility:IsReady(_Q)) then
             Control.CastSpell(HK_R)
         end
-        if(not Utility:IsReady(_Q) and self.Menu.Combo.Assassinate:Value() and Utility:HasBuff(myHero,"khazixEevolved")) then
+        if(not Utility:IsReady(_Q) and self.Menu.Combo.Assassinate:Value() and Utility:HasBuff(myHero,"KhazixEEvo")) then
             Control.CastSpell(HK_E, aPosition)
         end
     end
-    if(not Utility:IsReady(_Q) and self.Menu.Combo.Assassinate:Value() and Utility:HasBuff(myHero,"khazixEevolved")) then
+    if(not Utility:IsReady(_Q) and self.Menu.Combo.Assassinate:Value() and Utility:HasBuff(myHero,"KhazixEEvo")) then
         Control.CastSpell(HK_E, aPosition)
     end
 
