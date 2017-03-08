@@ -70,7 +70,6 @@ function RengoUnchained:Combo(target)
 	end
 end
 
---Utility (Credit to Tristana)
 class "Utility"
 
 function Utility:__init()
