@@ -6,8 +6,6 @@ require("DamageLib")
 function OnLoad() RengoUnchained() end
 
 
-class "RengoUnchained"
-
 function RengoUnchained:__init()
     Q = {range = myHero:GetSpellData(_Q).range, delay = myHero:GetSpellData(_Q).delay, speed = myHero:GetSpellData(_Q).speed, width = myHero:GetSpellData(_Q).width}
     W = {range = myHero:GetSpellData(_W).range, delay = myHero:GetSpellData(_W).delay, speed = myHero:GetSpellData(_W).speed, width = myHero:GetSpellData(_W).width}
