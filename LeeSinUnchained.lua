@@ -290,7 +290,6 @@ function LeeSinUnchained:InsectCheck(target)
     if not MapPosition:inWall(wardPos) then
         return wardPos
     else
-        PrintChat("In Wall!")
         return nil
     end
 end
