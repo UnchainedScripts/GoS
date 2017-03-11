@@ -15,6 +15,7 @@ local timeHolder = 0
 
 local wardJumpPos = nil
 local itemUsed2 = nil
+local timeHolder2 = 0
 local jumpComplete = false
 
 function LeeSinUnchained:__init()
@@ -24,6 +25,7 @@ function LeeSinUnchained:__init()
     R = {range = myHero:GetSpellData(_R).range, delay = myHero:GetSpellData(_R).delay, speed = myHero:GetSpellData(_R).speed, width = myHero:GetSpellData(_R).width}
     self:Menu()
     Callback.Add("Tick", function() self:Tick() end)
+    Callback.Add("Draw", function() self:Draw() end)
 end
 
 function LeeSinUnchained:Menu()
@@ -46,7 +48,18 @@ function LeeSinUnchained:Menu()
     self.Menu:MenuElement({type = MENU, id = "Misc", name = "Misc. Settings"})
     self.Menu.Misc:MenuElement({id = "WardJump", name = "Ward Jump", key = 72})
     self.Menu.Misc:MenuElement({id = "Insect", name = "Insect", key = 72})
+    self.Menu.Misc:MenuElement({id = "InsectFriend", name ="Kick to Ally", key = 84, value = true, toggle = true})
+    self.Menu.Misc:MenuElement({id = "InsectTower", name ="Kick to Ally Tower", key = 86, value = true, toggle = true})
     
+end
+
+function LeeSinUnchained:Draw()
+    if(self.Menu.Misc.InsectFriend:Value() == true) then
+        Draw.Text("Insect to Ally Enabled", myHero.pos:To2D().x - 100, myHero.pos:To2D().y+50)
+    end
+    if(self.Menu.Misc.InsectTower:Value() == true) then
+        Draw.Text("Insec to Tower Enabled", myHero.pos:To2D().x - 100, myHero.pos:To2D().y+70)
+    end
 end
 
 function LeeSinUnchained:Tick()
@@ -260,19 +273,24 @@ function LeeSinUnchained:InsectCheck(target)
     local closestTurretDistance = math.huge
     local closestTurret = nil
 
-    for i = 1, #Utility:GetAllyHeroes() do
-        local temp = myHero.pos:DistanceTo(Utility:GetAllyHeroes()[i].pos)
-        if (temp < 1000 and temp < closestHeroDistance) then
-            closestHeroDistance = temp
-            closestHero = Utility:GetAllyHeroes()[i]
+    
+    if(self.Menu.Misc.InsectFriend:Value() == true) then 
+        for i = 1, #Utility:GetAllyHeroes() do
+            local temp = myHero.pos:DistanceTo(Utility:GetAllyHeroes()[i].pos)
+            if (temp < 1000 and temp < closestHeroDistance) then
+                closestHeroDistance = temp
+                closestHero = Utility:GetAllyHeroes()[i]
+            end
         end
     end
 
-    for i = 1, Game.TurretCount() do
-        local temp = myHero.pos:DistanceTo(Game.Turret(i).pos)
-        if Game.Turret(i).isAlly == true and temp < 1000 and temp < closestTurretDistance and Game.Turret(i).health > 0 then
-            closestTurretDistance = temp
-            closestTurret = Game.Turret(i)
+    if(self.Menu.Misc.InsectTower:Value() == true)then
+        for i = 1, Game.TurretCount() do
+            local temp = myHero.pos:DistanceTo(Game.Turret(i).pos)
+            if Game.Turret(i).isAlly == true and temp < 1000 and temp < closestTurretDistance and Game.Turret(i).health > 0 then
+                closestTurretDistance = temp
+                closestTurret = Game.Turret(i)
+            end
         end
     end
 
@@ -300,12 +318,17 @@ function LeeSinUnchained:InsectResetCheck()
         itemUsed = nil
     end
 
-    if(timeHolder + 1.2 - Game.Timer() < 0) then
+    if(timeHolder ~= 0 and timeHolder + 1.2 - Game.Timer() < 0) then
         wardEst = nil
         itemUsed = nil
     end
 
     if(myHero.activeSpellSlot == 1) then
+        wardJumpPos = nil
+        itemUsed2 = nil
+    end
+
+    if(timeHolder2 ~= 0 and timeHolder2 + 1.2 - Game.Timer() < 0) then
         wardJumpPos = nil
         itemUsed2 = nil
     end
@@ -315,6 +338,7 @@ function LeeSinUnchained:WardJump()
     if(wardJumpPos == nil) then
         if(not MapPosition:inWall(mousePos)) then
             wardJumpPos = mousePos
+            timeHolder2 = Game.Timer()
         end
     end
 
